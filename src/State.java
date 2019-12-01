@@ -5,7 +5,7 @@ public class State {
 	private String stateString;
 	private String[] state = new String[3];
 	private HashSet<String> traversedStates = new HashSet<String>();
-	
+
 	public State(String input) {
 		// TODO Auto-generated constructor stub
 		this.stateString = input;
@@ -15,6 +15,16 @@ public class State {
 		this.state[1] = input.substring(3, 6);
 		this.state[2] = input.substring(6, 9);
 		
+	}
+	
+	public State(String input, int depth) {
+		// TODO Auto-generated constructor stub
+		this.stateString = input;
+		
+		//Separates the string into 3 rows
+		this.state[0] = input.substring(0, 3);
+		this.state[1] = input.substring(3, 6);
+		this.state[2] = input.substring(6, 9);
 	}
 	
 	/*
@@ -46,6 +56,28 @@ public class State {
 		return;
 	}
 	
+	public void combinations(State currentState, int depth) {
+		//The current state is checked against every state that's been visited, returns if it already exists
+		if (traversedStates.contains(currentState.getStateString()) || depth <= 0) {
+			return;
+		}
+		
+		traversedStates.add(currentState.getStateString());
+		
+		System.out.print("Number Of States:");
+		System.out.println(traversedStates.size());
+		System.out.println();
+		
+		//Next possible states are retrieved, then checked if it exists recursively
+		ArrayList<State> states = nextState(currentState);
+		
+		for (State nextState : states) {
+			combinations(nextState, depth - 1);
+		}
+		
+		return;
+	}
+
 	public ArrayList<State> nextState(State currentState) {
 		int[] position = currentState.getPosition();
 		ArrayList<State> states = new ArrayList<State>();
@@ -146,6 +178,10 @@ public class State {
 		return state;
 	}
 	
+	public HashSet<String> getTraversedStates() {
+		return traversedStates;
+	}
+	
 	public void outputState() {
 		System.out.println(this.state[0].toString());
 		System.out.println(this.state[1].toString());
@@ -162,6 +198,20 @@ public class State {
 	
 	public void sizeOfTraversedStates() {
 		System.out.println(traversedStates.size());
+	}
+	
+	static int compare(State state1, State state2) {
+		HashSet<String> distinctStates = new HashSet<String>();
+		
+		Iterator<String> set = state1.getTraversedStates().iterator();
+		while (set.hasNext()) {
+			String currentState = set.next();
+			if (!state2.getTraversedStates().contains(currentState)) {
+				distinctStates.add(currentState);
+			}
+		}
+		System.out.println(distinctStates.size());
+		return distinctStates.size();
 	}
 	
 }
