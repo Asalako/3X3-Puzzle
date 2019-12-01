@@ -4,7 +4,7 @@ public class State {
 	
 	private String stateString;
 	private String[] state = new String[3];
-	private ArrayList<State> traversedStates = new ArrayList<State>();
+	private HashSet<String> traversedStates = new HashSet<String>();
 	
 	public State(String input) {
 		// TODO Auto-generated constructor stub
@@ -26,13 +26,11 @@ public class State {
 	 */
 	public void combinations(State currentState) {
 		//The current state is checked against every state that's been visited, returns if it already exists
-		for (State aState : traversedStates) {
-			if (aState.getStateString().equals(currentState.getStateString())) {
-				return;
-			}
+		if (traversedStates.contains(currentState.getStateString())) {
+			return;
 		}
 		
-		traversedStates.add(currentState);
+		traversedStates.add(currentState.getStateString());
 		
 		System.out.print("Number Of States:");
 		System.out.println(traversedStates.size());
