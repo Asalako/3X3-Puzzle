@@ -5,6 +5,18 @@ public class State {
 	private String stateString;
 	private String[] state = new String[3];
 	private HashSet<String> traversedStates = new HashSet<String>();
+	private ArrayList<State> tree = new ArrayList<State>();
+	private int depth;
+	
+	public int getDepth() {
+		return depth;
+	}
+
+	public void setDepth(int depth) {
+		this.depth = depth;
+	}
+
+	private ArrayList<State> outputTree = new ArrayList<State>();
 
 	public State(String input) {
 		// TODO Auto-generated constructor stub
@@ -15,16 +27,6 @@ public class State {
 		this.state[1] = input.substring(3, 6);
 		this.state[2] = input.substring(6, 9);
 		
-	}
-	
-	public State(String input, int depth) {
-		// TODO Auto-generated constructor stub
-		this.stateString = input;
-		
-		//Separates the string into 3 rows
-		this.state[0] = input.substring(0, 3);
-		this.state[1] = input.substring(3, 6);
-		this.state[2] = input.substring(6, 9);
 	}
 	
 	/*
@@ -62,7 +64,10 @@ public class State {
 			return;
 		}
 		
+		currentState.setDepth(depth);
 		traversedStates.add(currentState.getStateString());
+		outputTree.add(currentState);
+		
 		
 		System.out.print("Number Of States:");
 		System.out.println(traversedStates.size());
@@ -77,7 +82,7 @@ public class State {
 		
 		return;
 	}
-
+	
 	public ArrayList<State> nextState(State currentState) {
 		int[] position = currentState.getPosition();
 		ArrayList<State> states = new ArrayList<State>();
@@ -194,6 +199,43 @@ public class State {
 		System.out.println("| " + charArray[1][0] + " |" + "| " + charArray[1][1] + " |" + "| " + charArray[1][2] + " |");
 		System.out.println("| " + charArray[2][0] + " |" + "| " + charArray[2][1] + " |" + "| " + charArray[2][2] + " |");
 
+	}
+	
+	public void outputTree() {
+		int depthlevel = getDepth();
+		
+		while (depthlevel >= 0 && (getDepth() - depthlevel) <= 3) {
+			System.out.println("Level: " + (getDepth() - depthlevel));
+			for (State state: outputTree) {
+				if (state.getDepth() == depthlevel) {
+					char[][] charArray = toListOfChars(state.getState());
+					System.out.print("| " + charArray[0][0] + " |" + "| " + charArray[0][1] + " |" + "| " + charArray[0][2] + " |      ");
+					
+				}
+			}
+			System.out.println("");
+			
+			for (State state: outputTree) {
+				if (state.getDepth() == depthlevel) {
+					char[][] charArray = toListOfChars(state.getState());
+					System.out.print("| " + charArray[1][0] + " |" + "| " + charArray[1][1] + " |" + "| " + charArray[1][2] + " |      ");
+					
+				}
+			}
+			
+			System.out.println("");
+			
+			for (State state: outputTree) {
+				if (state.getDepth() == depthlevel) {
+					char[][] charArray = toListOfChars(state.getState());
+					System.out.print("| " + charArray[2][0] + " |" + "| " + charArray[2][1] + " |" + "| " + charArray[2][2] + " |      ");
+					
+				}
+			}
+			System.out.println("");
+			System.out.println("");
+			depthlevel = depthlevel - 1;
+		}
 	}
 	
 	public void sizeOfTraversedStates() {

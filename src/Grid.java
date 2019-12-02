@@ -14,6 +14,7 @@ public class Grid {
 		state1.combinations(state1, 10);
 		state2.combinations(state2, 10);
 		State.compare(state1, state2);
+		state1.outputTree();
 	}
 
 }
