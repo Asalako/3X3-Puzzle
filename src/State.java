@@ -7,15 +7,6 @@ public class State {
 	private HashSet<String> traversedStates = new HashSet<String>();
 	private ArrayList<State> tree = new ArrayList<State>();
 	private int depth;
-	
-	public int getDepth() {
-		return depth;
-	}
-
-	public void setDepth(int depth) {
-		this.depth = depth;
-	}
-
 	private ArrayList<State> outputTree = new ArrayList<State>();
 
 	public State(String input) {
@@ -186,6 +177,15 @@ public class State {
 	public HashSet<String> getTraversedStates() {
 		return traversedStates;
 	}
+	
+	public int getDepth() {
+		return depth;
+	}
+
+	private void setDepth(int depth) {
+		this.depth = depth;
+	}
+
 	
 	public void outputState() {
 		System.out.println(this.state[0].toString());
