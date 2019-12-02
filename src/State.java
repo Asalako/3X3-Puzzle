@@ -242,7 +242,7 @@ public class State {
 		System.out.println(traversedStates.size());
 	}
 	
-	static int compare(State state1, State state2) {
+	static HashSet<String> compare(State state1, State state2) {
 		HashSet<String> distinctStates = new HashSet<String>();
 		
 		Iterator<String> set = state1.getTraversedStates().iterator();
@@ -253,7 +253,7 @@ public class State {
 			}
 		}
 		System.out.println(distinctStates.size());
-		return distinctStates.size();
+		return distinctStates;
 	}
 	
 }
