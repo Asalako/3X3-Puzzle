@@ -12,9 +12,10 @@ public class Grid {
 //			System.out.println("");
 //		}
 		state1.combinations(state1);
-		state2.combinations(state2);
+//		state2.combinations(state2);
 		State.compare(state1, state2);
-//		state1.outputTree();
+		state1.outputTree(10);
+		
 //		state2.outputTree();
 	}
 
