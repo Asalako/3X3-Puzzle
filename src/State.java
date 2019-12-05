@@ -5,7 +5,6 @@ public class State {
 	private String stateString;
 	private String[] state = new String[3];
 	private HashSet<String> traversedStates = new HashSet<String>();
-	private ArrayList<State> tree = new ArrayList<State>();
 	private int depth;
 	private ArrayList<State> outputTree = new ArrayList<State>();
 
@@ -37,6 +36,7 @@ public class State {
 		
 		System.out.print("Number Of States:");
 		System.out.println(traversedStates.size());
+		currentState.outputGrid();
 		System.out.println();
 		
 		//Next possible states are retrieved, then checked if it exists recursively
