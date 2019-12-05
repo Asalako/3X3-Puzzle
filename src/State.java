@@ -5,8 +5,6 @@ public class State {
 	private String stateString;
 	private String[] state = new String[3];
 	private HashSet<String> traversedStates = new HashSet<String>();
-	private ArrayList<State> tree = new ArrayList<State>();
-	private int depth;
 	private ArrayList<State> outputTree = new ArrayList<State>();
 
 	public State(String input) {
@@ -14,9 +12,7 @@ public class State {
 		this.stateString = input;
 		
 		//Separates the string into 3 rows
-		this.state[0] = input.substring(0, 3);
-		this.state[1] = input.substring(3, 6);
-		this.state[2] = input.substring(6, 9);
+		this.state = stringToState(input);
 		
 	}
 	
@@ -27,51 +23,35 @@ public class State {
 	 * @returns	
 	 * 
 	 */
-	public void combinations(State currentState) {
+	public boolean combinations(State currentState) {
 		//The current state is checked against every state that's been visited, returns if it already exists
+		boolean backTrack = false;
+		
 		if (traversedStates.contains(currentState.getStateString())) {
-			return;
+			return true;
 		}
 		
-		traversedStates.add(currentState.getStateString());
-		
-		System.out.print("Number Of States:");
-		System.out.println(traversedStates.size());
-		System.out.println();
-		
-		//Next possible states are retrieved, then checked if it exists recursively
-		ArrayList<State> states = nextState(currentState);
-		
-		for (State nextState : states) {
-			combinations(nextState);
-		}
-		
-		return;
-	}
-	
-	public void combinations(State currentState, int depth) {
-		//The current state is checked against every state that's been visited, returns if it already exists
-		if (traversedStates.contains(currentState.getStateString()) || depth <= 0) {
-			return;
-		}
-		
-		currentState.setDepth(depth);
 		traversedStates.add(currentState.getStateString());
 		outputTree.add(currentState);
-		
+
 		
 		System.out.print("Number Of States:");
 		System.out.println(traversedStates.size());
+		currentState.outputGrid();
 		System.out.println();
 		
 		//Next possible states are retrieved, then checked if it exists recursively
 		ArrayList<State> states = nextState(currentState);
 		
 		for (State nextState : states) {
-			combinations(nextState, depth - 1);
+			if (!traversedStates.contains(nextState.getStateString()) && backTrack == true) {
+				System.out.println("back to");
+				currentState.outputGrid();
+			}
+			backTrack = combinations(nextState);
 		}
 		
-		return;
+		return true;
 	}
 	
 	public ArrayList<State> nextState(State currentState) {
@@ -178,15 +158,10 @@ public class State {
 		return traversedStates;
 	}
 	
-	public int getDepth() {
-		return depth;
+	public void sizeOfTraversedStates() {
+		System.out.println(traversedStates.size());
 	}
 
-	private void setDepth(int depth) {
-		this.depth = depth;
-	}
-
-	
 	public void outputState() {
 		System.out.println(this.state[0].toString());
 		System.out.println(this.state[1].toString());
@@ -201,48 +176,79 @@ public class State {
 
 	}
 	
-	public void outputTree() {
-		int depthlevel = getDepth();
+	static public String[] stringToState(String str) {
+		String[] state = new String[3];
+		state[0] = str.substring(0, 3);
+		state[1] = str.substring(3, 6);
+		state[2] = str.substring(6, 9);
+		return state;
+	}
+	
+	public void outputTree(int statesPerLine) {
+		ArrayList<State> copyOfOutputTree = new ArrayList<State>(outputTree);
+		ArrayList<State> copyOfStates = new ArrayList<State>();
 		
-		while (depthlevel >= 0 && (getDepth() - depthlevel) <= 3) {
-			System.out.println("Level: " + (getDepth() - depthlevel));
-			for (State state: outputTree) {
-				if (state.getDepth() == depthlevel) {
-					char[][] charArray = toListOfChars(state.getState());
+		int noOfLines = Math.floorDiv(traversedStates.size(), statesPerLine);
+		System.out.println(noOfLines);
+		int i = 0;
+		int j = 1;
+		
+		while (i < noOfLines) {
+			for (int k = 0; k < statesPerLine; k++) {
+				State state =  copyOfOutputTree.get(k);
+				char[][] charArray = toListOfChars(state.getState());
+				copyOfStates.add(state);
+				
+				if (j < statesPerLine - 1) {
 					System.out.print("| " + charArray[0][0] + " |" + "| " + charArray[0][1] + " |" + "| " + charArray[0][2] + " |      ");
-					
+					j++;
+				} 
+				else {
+					System.out.print("| " + charArray[0][0] + " |" + "| " + charArray[0][1] + " |" + "| " + charArray[0][2] + " |      ");
+					j = 0;
 				}
 			}
-			System.out.println("");
-			
-			for (State state: outputTree) {
-				if (state.getDepth() == depthlevel) {
-					char[][] charArray = toListOfChars(state.getState());
-					System.out.print("| " + charArray[1][0] + " |" + "| " + charArray[1][1] + " |" + "| " + charArray[1][2] + " |      ");
-					
+			System.out.println();
+
+			for (State stateCopy: copyOfStates) {
+				char[][] grid = toListOfChars(stateCopy.getState());
+
+				if (j < statesPerLine - 1) {
+					System.out.print("| " + grid[1][0] + " |" + "| " + grid[1][1] + " |" + "| " + grid[1][2] + " |      ");
+					j++;
+				} 
+				else {
+					System.out.print("| " + grid[1][0] + " |" + "| " + grid[1][1] + " |" + "| " + grid[1][2] + " |      ");
+					j = 0;
+				}
+			}
+			System.out.println();
+
+			for (State stateCopy: copyOfStates) {
+				char[][] grid = toListOfChars(stateCopy.getState());
+				if (j < statesPerLine - 1) {
+					System.out.print("| " + grid[2][0] + " |" + "| " + grid[2][1] + " |" + "| " + grid[2][2] + " |      ");
+					j++;
+				} 
+				else {
+					System.out.print("| " + grid[2][0] + " |" + "| " + grid[2][1] + " |" + "| " + grid[2][2] + " |      ");
+					j = 0;
 				}
 			}
 			
-			System.out.println("");
-			
-			for (State state: outputTree) {
-				if (state.getDepth() == depthlevel) {
-					char[][] charArray = toListOfChars(state.getState());
-					System.out.print("| " + charArray[2][0] + " |" + "| " + charArray[2][1] + " |" + "| " + charArray[2][2] + " |      ");
-					
-				}
+			System.out.println();
+			System.out.println();
+				
+			for (State stateCopy: copyOfStates) {
+				copyOfOutputTree.remove(stateCopy);
 			}
-			System.out.println("");
-			System.out.println("");
-			depthlevel = depthlevel - 1;
+			copyOfStates.clear();
+			i++;
 		}
+		
 	}
 	
-	public void sizeOfTraversedStates() {
-		System.out.println(traversedStates.size());
-	}
-	
-	static HashSet<String> compare(State state1, State state2) {
+	static public HashSet<String> compare(State state1, State state2) {
 		HashSet<String> distinctStates = new HashSet<String>();
 		
 		Iterator<String> set = state1.getTraversedStates().iterator();
