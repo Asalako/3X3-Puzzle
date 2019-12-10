@@ -15,7 +15,7 @@ public class Grid {
 				"Would you like write all possible states to a file? Enter y/Y for yes any other character for no. ");
 		
 		if (scanner.next().toLowerCase().equals("y")) {
-			state1.writeState(11, "state1.txt");
+			state1.writeState(10, "state1.txt");
 		}
 	
 		
@@ -32,6 +32,7 @@ public class Grid {
 		
 		HashSet<String> diffStates = State.compare(state1, state2);
 				
+		//Outputs states in state1 that are not in state2
 		for (String state: diffStates) {
 			new State(state).outputGrid();
 		}
