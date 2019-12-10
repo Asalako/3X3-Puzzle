@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class State {
 	
@@ -11,6 +12,7 @@ public class State {
 	private String[] state = new String[3];
 	private HashSet<String> traversedStates = new HashSet<String>();
 	private ArrayList<State> outputTree = new ArrayList<State>();
+	private Stack<State> stack = new Stack<State>();
 
 	public State(String input) {
 		// TODO Auto-generated constructor stub
@@ -28,37 +30,56 @@ public class State {
 	 * @returns	returns true to know if last node of the tree has been reach 
 	 * 
 	 */
-	public boolean combinations(State currentState) {
+	public void combinations(State currentState) {
 		//The current state is checked against every state that's been visited, returns true if it already exists
-		boolean backTrack = false;
-		
-		if (traversedStates.contains(currentState.getStateString())) {
-			return true;
-		}
-		
 		traversedStates.add(currentState.getStateString());
 		outputTree.add(currentState);
-
+		stack.add(currentState);
+		
 		System.out.print("Number Of States: ");
 		System.out.println(traversedStates.size());
 		currentState.outputGrid();
 		System.out.println();
 		
-		//Next possible states are retrieved based on the current state
-		ArrayList<State> states = nextState(currentState);
-		
-		//Next possible states are checked to see if it exists recursively
-		for (State nextState : states) {
-			//If last node of the tree has been reach. It will backtrack to find the next working tree and output
-			//That node, to know where it went back to
-			if (!traversedStates.contains(nextState.getStateString()) && backTrack == true) {
-				System.out.println("End of tree. backtracking to");
+		while (stack.size() != 0) {
+			
+			ArrayList<State> states = nextState(currentState);
+			if (states.size() == 0) {
+				stack.pop();
+				if (stack.size() > 0) {
+					currentState = stack.lastElement();
+				}
+			} else {
+				currentState = states.get(0);
+				traversedStates.add(currentState.getStateString());
+				outputTree.add(currentState);
+				stack.add(currentState);
+				
+				System.out.print("Number Of States: ");
+				System.out.println(traversedStates.size());
 				currentState.outputGrid();
+				System.out.println();
 			}
-			backTrack = combinations(nextState);
 		}
 		
-		return true;
+		
+		
+		
+		
+
+//		System.out.print("Number Of States: ");
+//		System.out.println(traversedStates.size());
+//		currentState.outputGrid();
+//		System.out.println();
+		
+		//Next possible states are retrieved based on the current state
+		
+		//Next possible states are checked to see if it exists recursively
+		
+	}
+	
+	private boolean validMove(State nextState) {
+		return !traversedStates.contains(nextState.getStateString());
 	}
 	
 	/*
@@ -67,12 +88,13 @@ public class State {
 	 * @param	currentState - takes in a state to find the next possible moves
 	 * @returns array of states
 	 */
-	public ArrayList<State> nextState(State currentState) {
+	 public ArrayList<State> nextState(State currentState) {
 		int[] position = currentState.getPosition();
 		ArrayList<State> states = new ArrayList<State>();
 		String[] stateCopy = new String[3];
 		char[][] stateCharArray;
 		char charswap;
+		State newState;
 		
 		//Based on the x,y position of the empty space, checks if it can swap with an element above
 		if (position[0] > 0 && position[0] <=2) {
@@ -82,7 +104,10 @@ public class State {
 			stateCharArray[position[0] - 1][position[1]] = '_';
 			stateCharArray[position[0]][position[1]] = charswap;
 			stateCopy = charListToString(stateCharArray);
-			states.add(new State( toStateString(stateCopy) ));
+			newState = new State( toStateString(stateCopy) );
+			if ( validMove(newState) ) {
+				states.add(newState);
+			}
 		}
 		
 		//Checks if a swap can be made below
@@ -93,7 +118,10 @@ public class State {
 			stateCharArray[position[0] + 1][position[1]] = '_';
 			stateCharArray[position[0]][position[1]] = charswap;
 			stateCopy = charListToString(stateCharArray);
-			states.add(new State( toStateString(stateCopy) ));
+			newState = new State( toStateString(stateCopy) );
+			if ( validMove(newState) ) {
+				states.add(newState);
+			}
 		}
 		
 		//Checks if a swap can be made to the left
@@ -104,7 +132,10 @@ public class State {
 			stateCharArray[position[0]][position[1] - 1] = '_';
 			stateCharArray[position[0]][position[1]] = charswap;
 			stateCopy = charListToString(stateCharArray);
-			states.add(new State( toStateString(stateCopy) ));
+			newState = new State( toStateString(stateCopy) );
+			if ( validMove(newState) ) {
+				states.add(newState);
+			}
 		}
 		
 		//Checks if a swap can be made to the right
@@ -115,7 +146,10 @@ public class State {
 			stateCharArray[position[0]][position[1] + 1] = '_';
 			stateCharArray[position[0]][position[1]] = charswap;
 			stateCopy = charListToString(stateCharArray);
-			states.add(new State( toStateString(stateCopy) ));
+			newState = new State( toStateString(stateCopy) );
+			if ( validMove(newState) ) {
+				states.add(newState);
+			}
 		}
 		
 		return states;
