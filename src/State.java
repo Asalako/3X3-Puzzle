@@ -15,23 +15,18 @@ public class State {
 	private Stack<State> stack = new Stack<State>();
 
 	public State(String input) {
-		// TODO Auto-generated constructor stub
-		this.stateString = input;
-		
 		//Separates the string into 3 rows
 		this.state = stringToState(input);
-		
+		this.stateString = input;
 	}
 	
 	/*
 	 * Finds all possibles distinct states that can be achieved through x moves recursively
 	 * 
 	 * @param	currentState - takes in a state to be computed.
-	 * @returns	returns true to know if last node of the tree has been reach 
-	 * 
 	 */
 	public void combinations(State currentState) {
-		//The current state is checked against every state that's been visited, returns true if it already exists
+		//First state is added to the stack and visited states
 		traversedStates.add(currentState.getStateString());
 		outputTree.add(currentState);
 		stack.add(currentState);
@@ -42,8 +37,11 @@ public class State {
 		System.out.println();
 		
 		while (stack.size() != 0) {
-			
+		
+			//Retrieves next possible states
 			ArrayList<State> states = nextState(currentState);
+			
+			//If no possibles are available retrieve previous state else added state to stack
 			if (states.size() == 0) {
 				stack.pop();
 				if (stack.size() > 0) {
@@ -61,23 +59,16 @@ public class State {
 				System.out.println();
 			}
 		}
-		
-		
-		
-		
-		
-
-//		System.out.print("Number Of States: ");
-//		System.out.println(traversedStates.size());
-//		currentState.outputGrid();
-//		System.out.println();
-		
-		//Next possible states are retrieved based on the current state
-		
-		//Next possible states are checked to see if it exists recursively
+		return;
 		
 	}
 	
+	/*
+	 * Checks if the given state has already been visited
+	 * 
+	 * @param	nextState - State to check
+	 * @returns	boolean
+	 */
 	private boolean validMove(State nextState) {
 		return !traversedStates.contains(nextState.getStateString());
 	}
@@ -96,7 +87,7 @@ public class State {
 		char charswap;
 		State newState;
 		
-		//Based on the x,y position of the empty space, checks if it can swap with an element above
+		//Based on the x,y position of the empty space in the matrix, makes a swap with an element above
 		if (position[0] > 0 && position[0] <=2) {
 			stateCopy = copy( currentState.getState() );
 			stateCharArray = toListOfChars(stateCopy);
@@ -110,7 +101,7 @@ public class State {
 			}
 		}
 		
-		//Checks if a swap can be made below
+		//Makes a swap can be made below
 		if (position[0] >= 0 && position[0] <2) {
 			stateCopy = copy( currentState.getState() );
 			stateCharArray = toListOfChars(stateCopy);
@@ -124,7 +115,7 @@ public class State {
 			}
 		}
 		
-		//Checks if a swap can be made to the left
+		//Makes a swap can be made to the left
 		if (position[1] > 0 && position[1] <=2) {
 			stateCopy = copy( currentState.getState() );
 			stateCharArray = toListOfChars(stateCopy);
@@ -138,7 +129,7 @@ public class State {
 			}
 		}
 		
-		//Checks if a swap can be made to the right
+		//Makes a swap can be made to the right
 		if (position[1] >= 0 && position[1] <2) {
 			stateCopy = copy( currentState.getState() );
 			stateCharArray = toListOfChars(stateCopy);
@@ -151,13 +142,12 @@ public class State {
 				states.add(newState);
 			}
 		}
-		
 		return states;
 		
 	}
 	
 	/*
-	 * Gets the index position of the _ (empty space in the state) in the 2d array
+	 * Gets the index position of the empty space in the state in the 2d array
 	 * 
 	 * @returns array of ints
 	 */
@@ -173,7 +163,6 @@ public class State {
 				position[1] = index;
 			}
 		}
-		
 		return position;
 	}
 	
@@ -252,14 +241,14 @@ public class State {
 	}
 
 	/*
-	 * Outputs the state as 3x3 matrix
+	 * Outputs the state as a 3x3 matrix
 	 */
 	public void outputGrid() {
 		char[][] charArray = toListOfChars(state);
 		System.out.println("| " + charArray[0][0] + " |" + "| " + charArray[0][1] + " |" + "| " + charArray[0][2] + " |");
 		System.out.println("| " + charArray[1][0] + " |" + "| " + charArray[1][1] + " |" + "| " + charArray[1][2] + " |");
 		System.out.println("| " + charArray[2][0] + " |" + "| " + charArray[2][1] + " |" + "| " + charArray[2][2] + " |\n");
-
+		return;
 	}
 	
 	/*
@@ -351,15 +340,13 @@ public class State {
 				System.out.println("The state must have 9 characters.");
 				System.out.print("Enter a valid State: ");
 				input = scanner.next();
-			}
-			else if ( !input.contains("_") ) {
+			
+			}else if ( !input.contains("_") ) {
 				System.out.println("The state must contain an underscore. _");
 				System.out.print("Enter a valid State: ");
 				input = scanner.next();
 			}
-			
 		}
-		
 		return input;
 	}
 	
@@ -382,7 +369,6 @@ public class State {
 				distinctStates.add(currentState);
 			}
 		}
-		
 		return distinctStates;
 	}
 	

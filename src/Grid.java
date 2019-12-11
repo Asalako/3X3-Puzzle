@@ -18,7 +18,6 @@ public class Grid {
 			state1.writeState(10, "state1.txt");
 		}
 	
-		
 		System.out.print("Enter the second State: ");
 		State state2 = new State(State.stateValidation(scanner.next()));
 		state2.combinations(state2);
