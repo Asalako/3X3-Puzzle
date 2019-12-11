@@ -24,11 +24,9 @@ public class State {
 	 * Finds all possibles distinct states that can be achieved through x moves recursively
 	 * 
 	 * @param	currentState - takes in a state to be computed.
-	 * @returns	returns true to know if last node of the tree has been reach 
-	 * 
 	 */
 	public void combinations(State currentState) {
-		//First is added to the stack and visited states
+		//First state is added to the stack and visited states
 		traversedStates.add(currentState.getStateString());
 		outputTree.add(currentState);
 		stack.add(currentState);
@@ -40,10 +38,10 @@ public class State {
 		
 		while (stack.size() != 0) {
 		
-			//Checks next possible states
+			//Retrieves next possible states
 			ArrayList<State> states = nextState(currentState);
 			
-			//If no possibles are available retrieve previous state else add state to stack
+			//If no possibles are available retrieve previous state else added state to stack
 			if (states.size() == 0) {
 				stack.pop();
 				if (stack.size() > 0) {
@@ -89,7 +87,7 @@ public class State {
 		char charswap;
 		State newState;
 		
-		//Based on the x,y position of the empty space in the matrix, checks if it can swap with an element above
+		//Based on the x,y position of the empty space in the matrix, makes a swap with an element above
 		if (position[0] > 0 && position[0] <=2) {
 			stateCopy = copy( currentState.getState() );
 			stateCharArray = toListOfChars(stateCopy);
@@ -103,7 +101,7 @@ public class State {
 			}
 		}
 		
-		//Checks if a swap can be made below
+		//Makes a swap can be made below
 		if (position[0] >= 0 && position[0] <2) {
 			stateCopy = copy( currentState.getState() );
 			stateCharArray = toListOfChars(stateCopy);
@@ -117,7 +115,7 @@ public class State {
 			}
 		}
 		
-		//Checks if a swap can be made to the left
+		//Makes a swap can be made to the left
 		if (position[1] > 0 && position[1] <=2) {
 			stateCopy = copy( currentState.getState() );
 			stateCharArray = toListOfChars(stateCopy);
@@ -131,7 +129,7 @@ public class State {
 			}
 		}
 		
-		//Checks if a swap can be made to the right
+		//Makes a swap can be made to the right
 		if (position[1] >= 0 && position[1] <2) {
 			stateCopy = copy( currentState.getState() );
 			stateCharArray = toListOfChars(stateCopy);
@@ -149,7 +147,7 @@ public class State {
 	}
 	
 	/*
-	 * Gets the index position of the _ (empty space in the state) in the 2d array
+	 * Gets the index position of the empty space in the state in the 2d array
 	 * 
 	 * @returns array of ints
 	 */
@@ -243,7 +241,7 @@ public class State {
 	}
 
 	/*
-	 * Outputs the state as 3x3 matrix
+	 * Outputs the state as a 3x3 matrix
 	 */
 	public void outputGrid() {
 		char[][] charArray = toListOfChars(state);
